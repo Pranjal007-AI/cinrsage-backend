@@ -113,7 +113,7 @@ async def generate_voice(request: VoiceRequest):
     }
     payload = {
         "text": text,
-        "model_id": "eleven_monolingual_v1",
+        "model_id": "eleven_turbo_v2_5",
         "voice_settings": {
             "stability": 0.5,
             "similarity_boost": 0.75
@@ -145,13 +145,13 @@ async def options_image():
 async def generate_image(request: ImageRequest):
     HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
-    url = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
+    url = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell/v1/images/generations"
     headers = {
         "Authorization": f"Bearer {HF_API_KEY}",
         "Content-Type": "application/json"
     }
     payload = {
-        "inputs": request.prompt
+        "prompt": request.prompt
     }
 
     async with httpx.AsyncClient(timeout=60.0) as client:
