@@ -4,3 +4,4 @@ python-dotenv
 langchain-core
 langchain-mistralai
 pydantic
+httpx
