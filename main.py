@@ -145,7 +145,7 @@ async def options_image():
 async def generate_image(request: ImageRequest):
     HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
-    url = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell/v1/images/generations"
+    url = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
     headers = {
         "Authorization": f"Bearer {HF_API_KEY}",
         "Content-Type": "application/json"
