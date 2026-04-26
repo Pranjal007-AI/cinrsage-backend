@@ -11,11 +11,11 @@ load_dotenv()
 
 app = FastAPI()
 
-# Allow requests from your Netlify frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Replace * with your Netlify URL after deploy
-    allow_methods=["POST"],
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -55,24 +55,17 @@ Category:
 
 Key Entities:
 - ...
-- ...
-- ...
 
 Key Points:
-- ...
-- ...
 - ...
 
 Important Data:
 - ...
-- ...
 
 Timeline (if any):
 - ...
-- ...
 
 Insights:
-- ...
 - ...
 
 Sentiment:
