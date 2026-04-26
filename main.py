@@ -11,14 +11,19 @@ load_dotenv()
 
 app = FastAPI()
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=False,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
+@app.options("/analyze")
+async def options_analyze():
+    return {"message": "OK"}
 model = ChatMistralAI(
     model="mistral-large-latest",
     mistral_api_key=os.getenv("MISTRAL_API_KEY")
