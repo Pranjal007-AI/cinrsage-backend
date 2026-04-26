@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
-
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_mistralai import ChatMistralAI
 
@@ -32,20 +31,33 @@ You are an expert AI assistant specialized in extracting key information and sum
 Your responses must be accurate, structured, and easy to read.
 Do not hallucinate. If information is missing, simply skip it.
 Think internally but do not show reasoning.
+CRITICAL: Do NOT use markdown formatting. No asterisks (*), no bold (**text**), no # headers. Plain text only.
 """),
     ("human", """
 Analyze the text below and produce a well-structured output.
+
+STRICT RULES:
+- No markdown, no asterisks (*), no bold, no # headers. Plain text only.
+- Use EXACTLY the labels below, nothing else.
+- Each list item must start with a dash (-)
+
 ========================
 INPUT:
 {input_text}
 ========================
+
 Title:
 Category:
 Key Entities:
+-
 Key Points:
+-
 Important Data:
+-
 Timeline (if any):
+-
 Insights:
+-
 Sentiment:
 Summary:
 """)
@@ -67,3 +79,4 @@ async def analyze(request: AnalyzeRequest):
     final_prompt = Prompts.invoke({"input_text": request.input_text})
     result = model.invoke(final_prompt)
     return {"result": result.content}
+
