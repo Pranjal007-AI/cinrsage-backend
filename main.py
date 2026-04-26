@@ -145,16 +145,13 @@ async def options_image():
 async def generate_image(request: ImageRequest):
     HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
-    url = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell/v1/images/generations"
+   url = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
     headers = {
         "Authorization": f"Bearer {HF_API_KEY}",
         "Content-Type": "application/json"
     }
-    payload = {
-    "prompt": request.prompt,
-    "num_inference_steps": 4,
-    "width": 768,
-    "height": 432
+   payload = {
+    "inputs": request.prompt
 }
     async with httpx.AsyncClient(timeout=60.0) as client:
         response = await client.post(url, headers=headers, json=payload)
