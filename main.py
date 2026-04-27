@@ -113,7 +113,7 @@ async def generate_voice(request: VoiceRequest):
     }
     payload = {
         "text": text,
-        "model_id": "eleven_turbo_v2_5",
+        "model_id": "eleven_monolingual_v1",
         "voice_settings": {
             "stability": 0.5,
             "similarity_boost": 0.75
@@ -136,30 +136,23 @@ async def generate_voice(request: VoiceRequest):
     )
 
 
-# ── Image Generation (HuggingFace FLUX.1-schnell) ─────────────────
+# ── Image Generation (Pollinations.ai - Free) ──────────────────────
 @app.options("/generate-image")
 async def options_image():
     return JSONResponse(content={"message": "OK"})
 
 @app.post("/generate-image")
 async def generate_image(request: ImageRequest):
-    HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
-
-    url = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
-    headers = {
-        "Authorization": f"Bearer {HF_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "prompt": request.prompt
-    }
+    import urllib.parse
+    encoded = urllib.parse.quote(request.prompt)
+    image_url = f"https://image.pollinations.ai/prompt/{encoded}?width=768&height=432&nologo=true"
 
     async with httpx.AsyncClient(timeout=60.0) as client:
-        response = await client.post(url, headers=headers, json=payload)
+        response = await client.get(image_url)
         if response.status_code != 200:
             return JSONResponse(
                 status_code=response.status_code,
-                content={"error": "HuggingFace API error", "detail": response.text}
+                content={"error": "Image generation failed"}
             )
         image_bytes = response.content
 
@@ -168,3 +161,4 @@ async def generate_image(request: ImageRequest):
         media_type="image/jpeg",
         headers={"Content-Disposition": "inline; filename=generated.jpg"}
     )
+
